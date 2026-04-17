@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RBD Electrical - Honor Board</title>
+<style>
+  :root {
+    --rbd-blue: #14396A;
+    --rbd-blue-light: #1B4F8F;
+    --rbd-gold: #EDB220;
+    --rbd-gold-light: #F5C843;
+    --rbd-green: #7AB929;
+    --rbd-green-dark: #5A9A10;
+    --bg-main: #f4f6fa;
+    --card-bg: #ffffff;
+    --text-primary: #14203a;
+    --text-secondary: #555566;
+    --gold: #d4a017;
+    --silver: #8a9bae;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-main);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, var(--rbd-blue) 0%, var(--rbd-blue-light) 50%, #245da1 100%);
+    color: white;
+    padding: 1.2rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--rbd-gold), var(--rbd-green), var(--rbd-blue));
+  }
+  .header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.3rem;
+  }
+  .header .subtitle {
+    font-size: 1rem;
+    opacity: 0.85;
+    font-weight: 400;
+  }
+  .header-logo {
+    height: 172px;
+    margin-bottom: -0.1rem;
+    object-fit: contain;
+  }
+  .header-brand-fallback {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 0.3rem;
+  }
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    text-align: center;
+  }
+  .stat-item .stat-num {
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+  .stat-item .stat-label {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    background: white;
+    border-bottom: 1px solid #e0e4ea;
+    padding: 0.8rem 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .filter-btn {
+    padding: 0.4rem 1rem;
+    border: 2px solid #dde1e8;
+    border-radius: 20px;
+    background: white;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover { border-color: var(--rbd-blue); color: var(--rbd-blue); }
+  .filter-btn.active {
+    background: var(--rbd-blue);
+    border-color: var(--rbd-blue);
+    color: white;
+  }
+  .filter-btn.loc-btn.active {
+    background: var(--rbd-gold);
+    border-color: var(--rbd-gold);
+    color: var(--rbd-blue);
+  }
+
+  /* ── Milestone sections ── */
+  .content { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+
+  .milestone-section {
+    margin-bottom: 2rem;
+    animation: fadeUp 0.5s ease-out both;
+  }
+  .milestone-section:nth-child(2) { animation-delay: 0.1s; }
+  .milestone-section:nth-child(3) { animation-delay: 0.2s; }
+  .milestone-section:nth-child(4) { animation-delay: 0.3s; }
+  .milestone-section:nth-child(5) { animation-delay: 0.4s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .milestone-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e0e4ea;
+  }
+  .milestone-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .milestone-header h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .milestone-header .count {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    margin-left: 0.3rem;
+  }
+
+  /* tier colors */
+  .tier-15 .milestone-icon { background: linear-gradient(135deg, var(--rbd-gold), #d4a017); color: var(--rbd-blue); }
+  .tier-15 .milestone-header { border-bottom-color: var(--rbd-gold); }
+  .tier-10 .milestone-icon { background: linear-gradient(135deg, var(--rbd-blue), var(--rbd-blue-light)); color: white; }
+  .tier-10 .milestone-header { border-bottom-color: var(--rbd-blue); }
+  .tier-5 .milestone-icon { background: linear-gradient(135deg, var(--rbd-green), var(--rbd-green-dark)); color: white; }
+  .tier-5 .milestone-header { border-bottom-color: var(--rbd-green); }
+  .tier-1 .milestone-icon { background: linear-gradient(135deg, var(--rbd-blue-light), #3572b5); color: white; }
+  .tier-1 .milestone-header { border-bottom-color: var(--rbd-blue-light); }
+  .tier-0 .milestone-icon { background: linear-gradient(135deg, #8a9bae, #6b7d8e); color: white; }
+  .tier-0 .milestone-header { border-bottom-color: var(--silver); }
+
+  /* ── Employee cards grid ── */
+  .employees-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .employee-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+    border: 1px solid #e8ecf1;
+    transition: transform 0.15s, box-shadow 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .employee-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  .avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .emp-info { flex: 1; min-width: 0; }
+  .emp-name {
+    font-weight: 600;
+    font-size: 0.92rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .emp-meta {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+  .emp-years {
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .location-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-weight: 500;
+    vertical-align: middle;
+  }
+  .loc-devonport { background: #e8f0fb; color: var(--rbd-blue); }
+  .loc-hobart { background: #fdf5e0; color: #9a7a0a; }
+
+  /* ── Updated date ── */
+  .updated {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.5rem; }
+    .stats-bar { gap: 1.5rem; }
+    .employees-grid { grid-template-columns: 1fr; }
+    .filter-bar { padding: 0.6rem 1rem; }
+  }
+
+  /* ── No results ── */
+  .no-results {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  /* Hide sections with no visible cards */
+  .milestone-section.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="https://i.imgur.com/DgbxQPv.png" alt="RBD Electrical" class="header-logo"
+       onerror="this.style.display='none'; document.querySelector('.header-brand-fallback').style.display='block';">
+  <div class="header-brand-fallback" style="display:none;">RBD Electrical</div>
+  <h1>Honor Board</h1>
+  <p class="subtitle">Recognising the dedication and service of our team</p>
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num" id="statTotal">—</div>
+      <div class="stat-label">Team Members</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="statYears">—</div>
+      <div class="stat-label">Combined Years</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="statLongest">—</div>
+      <div class="stat-label">Longest Serving</div>
+    </div>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
+  <button class="filter-btn" data-filter="15" onclick="setFilter('15', this)">15+ Years</button>
+  <button class="filter-btn" data-filter="10" onclick="setFilter('10', this)">10+ Years</button>
+  <button class="filter-btn" data-filter="5" onclick="setFilter('5', this)">5+ Years</button>
+  <button class="filter-btn" data-filter="1" onclick="setFilter('1', this)">1–4 Years</button>
+  <button class="filter-btn" data-filter="0" onclick="setFilter('0', this)">&lt; 1 Year</button>
+  <span style="width:1px;background:#ddd;margin:0 0.3rem"></span>
+  <button class="filter-btn loc-btn" data-loc="all" onclick="setLocation('all', this)">Both Offices</button>
+  <button class="filter-btn loc-btn" data-loc="Devonport" onclick="setLocation('Devonport', this)">Devonport</button>
+  <button class="filter-btn loc-btn" data-loc="Hobart" onclick="setLocation('Hobart', this)">Hobart</button>
+</div>
+
+<div class="content" id="content"></div>
+<div class="updated" id="updatedText"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// DATA — Replace this array or load from external JSON
+// Power Automate can overwrite this section or provide
+// an external employees.json file
+// ══════════════════════════════════════════════════════════
+const EMPLOYEES = [
+  {"firstName":"Adam","surname":"Britt","location":"Devonport","startDate":"2025-04-25"},
+  {"firstName":"Alex","surname":"Findlater","location":"Devonport","startDate":"2015-11-04"},
+  {"firstName":"Alex","surname":"Yeo","location":"Hobart","startDate":"2025-10-27"},
+  {"firstName":"Ben","surname":"Richardson","location":"Devonport","startDate":"2010-01-04"},
+  {"firstName":"Ben","surname":"Solomon","location":"Devonport","startDate":"2008-01-24"},
+  {"firstName":"Ben","surname":"Frankcombe","location":"Devonport","startDate":"2024-02-19"},
+  {"firstName":"Bianca","surname":"Eberle","location":"Devonport","startDate":"2021-06-21"},
+  {"firstName":"Billie","surname":"Coles","location":"Hobart","startDate":"2023-01-13"},
+  {"firstName":"Brayden","surname":"Schottmeier","location":"Hobart","startDate":"2022-01-17"},
+  {"firstName":"Brendan","surname":"Stark","location":"Devonport","startDate":"2014-06-05"},
+  {"firstName":"Brett","surname":"Saward","location":"Devonport","startDate":"2017-04-03"},
+  {"firstName":"Brock","surname":"Mitchell","location":"Devonport","startDate":"2022-01-10"},
+  {"firstName":"Brock","surname":"Wilton","location":"Hobart","startDate":"2018-07-23"},
+  {"firstName":"Brock","surname":"Webb","location":"Devonport","startDate":"2023-11-20"},
+  {"firstName":"Brodie","surname":"Whyte","location":"Hobart","startDate":"2021-01-11"},
+  {"firstName":"Bryce","surname":"Richardson","location":"Devonport","startDate":"2023-09-27"},
+  {"firstName":"Callum","surname":"Howe","location":"Devonport","startDate":"2014-04-09"},
+  {"firstName":"Charlie","surname":"Carr","location":"Hobart","startDate":"2026-01-28"},
+  {"firstName":"Chris","surname":"McKnight","location":"Hobart","startDate":"2021-11-10"},
+  {"firstName":"Chris","surname":"Meredith","location":"Hobart","startDate":"2025-09-22"},
+  {"firstName":"Cooper","surname":"Quinn","location":"Devonport","startDate":"2024-08-05"},
+  {"firstName":"Damien","surname":"Virieux","location":"Hobart","startDate":"2015-06-29"},
+  {"firstName":"Daniel","surname":"McGeorge-Oanta","location":"Devonport","startDate":"2024-06-06"},
+  {"firstName":"Declan","surname":"Wilson","location":"Hobart","startDate":"2023-01-30"},
+  {"firstName":"Dylan","surname":"Zantuck","location":"Hobart","startDate":"2021-03-26"},
+  {"firstName":"Edward","surname":"Broadby","location":"Hobart","startDate":"2025-02-03"},
+  {"firstName":"Fletcher","surname":"Moncrieff","location":"Devonport","startDate":"2025-02-03"},
+  {"firstName":"Flynn","surname":"Saward","location":"Devonport","startDate":"2021-07-05"},
+  {"firstName":"Gabriel","surname":"Peattie","location":"Hobart","startDate":"2026-03-16"},
+  {"firstName":"George","surname":"Dunham","location":"Devonport","startDate":"2023-10-20"},
+  {"firstName":"George","surname":"Auchterlonie","location":"Hobart","startDate":"2026-02-13"},
+  {"firstName":"Graeme","surname":"Smith","location":"Hobart","startDate":"2018-03-13"},
+  {"firstName":"Greg","surname":"Knowles","location":"Devonport","startDate":"2015-11-30"},
+  {"firstName":"Greg","surname":"Sharp","location":"Hobart","startDate":"2025-10-27"},
+  {"firstName":"Harrison","surname":"Henry","location":"Hobart","startDate":"2022-04-04"},
+  {"firstName":"Harry","surname":"Macleod","location":"Hobart","startDate":"2026-01-27"},
+  {"firstName":"Hayden","surname":"Rand","location":"Devonport","startDate":"2022-01-31"},
+  {"firstName":"Howard","surname":"Tapping","location":"Hobart","startDate":"2022-11-07"},
+  {"firstName":"Jaidan","surname":"Walmsley","location":"Hobart","startDate":"2026-03-02"},
+  {"firstName":"James","surname":"Cole","location":"Hobart","startDate":"2026-02-10"},
+  {"firstName":"Jesse","surname":"Foster","location":"Hobart","startDate":"2022-08-23"},
+  {"firstName":"Joe","surname":"Brogan","location":"Hobart","startDate":"2014-09-15"},
+  {"firstName":"Jordan","surname":"Lyons","location":"Devonport","startDate":"2026-03-31"},
+  {"firstName":"Josh","surname":"Brazendale","location":"Hobart","startDate":"2022-06-20"},
+  {"firstName":"Joshua","surname":"Langworthy","location":"Hobart","startDate":"2021-10-10"},
+  {"firstName":"Karen","surname":"Hall","location":"Devonport","startDate":"2014-06-17"},
+  {"firstName":"Kayden","surname":"Smith","location":"Devonport","startDate":"2023-03-06"},
+  {"firstName":"Kieran","surname":"Dooley","location":"Hobart","startDate":"2025-09-08"},
+  {"firstName":"Kobie","surname":"Saddington","location":"Devonport","startDate":"2026-03-31"},
+  {"firstName":"Len","surname":"Dyke","location":"Devonport","startDate":"2014-06-05"},
+  {"firstName":"Lily","surname":"Bain","location":"Hobart","startDate":"2024-08-06"},
+  {"firstName":"Magnus","surname":"Overdijk","location":"Devonport","startDate":"2021-02-01"},
+  {"firstName":"Marek","surname":"Porter","location":"Devonport","startDate":"2015-11-04"},
+  {"firstName":"Mark","surname":"Richardson","location":"Devonport","startDate":"2007-06-04"},
+  {"firstName":"Mark","surname":"Smith","location":"Devonport","startDate":"2016-08-01"},
+  {"firstName":"Mathew","surname":"Lehtinen","location":"Devonport","startDate":"2014-06-09"},
+  {"firstName":"Matthew","surname":"Hart","location":"Devonport","startDate":"2024-03-13"},
+  {"firstName":"Michael","surname":"Chadwick","location":"Hobart","startDate":"2023-02-14"},
+  {"firstName":"Michael","surname":"Hitchins","location":"Devonport","startDate":"2024-04-22"},
+  {"firstName":"Mick","surname":"Whyte","location":"Hobart","startDate":"2018-04-30"},
+  {"firstName":"Mitchell","surname":"Pulford","location":"Devonport","startDate":"2022-02-14"},
+  {"firstName":"Mitchell","surname":"Pursell","location":"Hobart","startDate":"2026-01-19"},
+  {"firstName":"Nicholas","surname":"Blackberry","location":"Hobart","startDate":"2024-03-29"},
+  {"firstName":"Nick","surname":"Davies","location":"Hobart","startDate":"2013-04-29"},
+  {"firstName":"Nick","surname":"Richardson","location":"Devonport","startDate":"2015-04-23"},
+  {"firstName":"Nigel","surname":"Beveridge","location":"Devonport","startDate":"2019-08-13"},
+  {"firstName":"Oscar","surname":"Dickson","location":"Hobart","startDate":"2026-02-24"},
+  {"firstName":"Paul","surname":"Greaves","location":"Hobart","startDate":"2025-12-01"},
+  {"firstName":"Paul","surname":"Reid","location":"Hobart","startDate":"2026-01-15"},
+  {"firstName":"Randall","surname":"Lees","location":"Devonport","startDate":"2011-05-10"},
+  {"firstName":"Riley","surname":"Parkin","location":"Hobart","startDate":null},
+  {"firstName":"Roman","surname":"Jopson","location":"Devonport","startDate":"2022-06-27"},
+  {"firstName":"Roy","surname":"Martin","location":"Devonport","startDate":"2016-06-20"},
+  {"firstName":"Ryan","surname":"Wakefield","location":"Hobart","startDate":"2020-08-20"},
+  {"firstName":"Ryan","surname":"Burnaby","location":"Hobart","startDate":"2022-01-24"},
+  {"firstName":"Ryan","surname":"Allen","location":"Devonport","startDate":"2024-08-05"},
+  {"firstName":"Samuel","surname":"Buxton","location":"Hobart","startDate":"2025-05-20"},
+  {"firstName":"Scott","surname":"Magrath","location":"Hobart","startDate":"2013-08-27"},
+  {"firstName":"Simon","surname":"Ackling","location":"Devonport","startDate":"2018-12-17"},
+  {"firstName":"Simon","surname":"Jones","location":"Devonport","startDate":"2017-02-28"},
+  {"firstName":"Steve","surname":"Dell","location":"Devonport","startDate":"2010-06-14"},
+  {"firstName":"Stuart","surname":"Baade","location":"Devonport","startDate":"2024-05-22"},
+  {"firstName":"Tarea","surname":"Kelly","location":"Devonport","startDate":"2015-10-03"},
+  {"firstName":"Tayte","surname":"Duggan","location":"Devonport","startDate":"2018-12-03"},
+  {"firstName":"Tim","surname":"McConnon","location":"Hobart","startDate":"2019-04-01"},
+  {"firstName":"Tim","surname":"Ackling","location":"Devonport","startDate":"2023-05-08"},
+  {"firstName":"Tom","surname":"Nibbs","location":"Devonport","startDate":"2021-07-05"},
+  {"firstName":"Tomas","surname":"Sullivan","location":"Devonport","startDate":"2022-06-27"},
+  {"firstName":"Trae","surname":"Stennings","location":"Hobart","startDate":"2024-01-15"},
+  {"firstName":"Will","surname":"Sutton","location":"Devonport","startDate":"2014-06-04"},
+  {"firstName":"Xavier","surname":"Brudenell","location":"Hobart","startDate":"2024-01-18"},
+  {"firstName":"Zachary","surname":"Collins","location":"Hobart","startDate":"2022-06-06"}
+];
+
+// ══════════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════════
+const TIERS = [
+  { key: '15', min: 15, label: '15+ Years of Service', icon: '\u2B50', iconAlt: 'star' },
+  { key: '10', min: 10, label: '10–14 Years of Service', icon: '\uD83C\uDFC6', iconAlt: 'trophy' },
+  { key: '5',  min: 5,  label: '5–9 Years of Service', icon: '\uD83D\uDCAA', iconAlt: 'strength' },
+  { key: '1',  min: 1,  label: '1–4 Years of Service', icon: '\u26A1', iconAlt: 'bolt' },
+  { key: '0',  min: 0,  label: 'Welcome — First Year', icon: '\uD83D\uDC4B', iconAlt: 'wave' },
+];
+
+const AVATAR_COLORS = [
+  '#14396A','#c09a10','#5A9A10','#7b1fa2','#c62828',
+  '#00838f','#ad1457','#4e342e','#1B4F8F','#2e7d32',
+  '#b8900e','#6a1b9a','#00695c','#3572b5','#14396A'
+];
+
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
+let currentFilter = 'all';
+let currentLocation = 'all';
+
+// ══════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════
+const today = new Date();
+
+function yearsOfService(startDate) {
+  if (!startDate) return 0;
+  const start = new Date(startDate);
+  let years = today.getFullYear() - start.getFullYear();
+  const mDiff = today.getMonth() - start.getMonth();
+  if (mDiff < 0 || (mDiff === 0 && today.getDate() < start.getDate())) years--;
+  return Math.max(0, years);
+}
+
+function exactYearsMonths(startDate) {
+  if (!startDate) return 'Start date pending';
+  const start = new Date(startDate);
+  // If start date is in the future
+  if (start > today) {
+    return 'Starting soon';
+  }
+  let years = today.getFullYear() - start.getFullYear();
+  let months = today.getMonth() - start.getMonth();
+  if (today.getDate() < start.getDate()) months--;
+  if (months < 0) { years--; months += 12; }
+  if (years === 0 && months === 0) return 'Just started';
+  if (years === 0) return months + (months === 1 ? ' month' : ' months');
+  if (months === 0) return years + (years === 1 ? ' year' : ' years');
+  return years + (years === 1 ? ' yr ' : ' yrs ') + months + (months === 1 ? ' mo' : ' mos');
+}
+
+function formatStartDate(startDate) {
+  if (!startDate) return '';
+  const d = new Date(startDate);
+  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function getTier(years) {
+  if (years >= 15) return '15';
+  if (years >= 10) return '10';
+  if (years >= 5) return '5';
+  if (years >= 1) return '1';
+  return '0';
+}
+
+function avatarColor(name) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
+function initials(first, last) {
+  return (first.charAt(0) + last.charAt(0)).toUpperCase();
+}
+
+// ══════════════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════════════
+function render() {
+  // Process employees
+  const processed = EMPLOYEES.map(e => ({
+    ...e,
+    years: yearsOfService(e.startDate),
+    tier: getTier(yearsOfService(e.startDate)),
+    display: exactYearsMonths(e.startDate),
+    started: formatStartDate(e.startDate),
+  }));
+
+  // Filter by location first
+  const filtered = currentLocation === 'all'
+    ? processed
+    : processed.filter(e => e.location === currentLocation);
+
+  // Stats (based on filtered list)
+  const total = filtered.length;
+  const combinedYears = filtered.reduce((sum, e) => sum + e.years, 0);
+  const longest = filtered.length > 0
+    ? filtered.reduce((max, e) => e.years > max.years ? e : max, filtered[0])
+    : { years: 0 };
+
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statYears').textContent = combinedYears + '+';
+  document.getElementById('statLongest').textContent = longest.years + ' yrs';
+
+  // Group by tier
+  const groups = {};
+  TIERS.forEach(t => groups[t.key] = []);
+  filtered.forEach(e => {
+    groups[e.tier].push(e);
+  });
+
+  // Sort within each group: most years first, then alphabetical
+  Object.values(groups).forEach(arr =>
+    arr.sort((a, b) => b.years - a.years || a.surname.localeCompare(b.surname))
+  );
+
+  // Build HTML
+  let html = '';
+  TIERS.forEach(tier => {
+    const emps = groups[tier.key];
+    const show = currentFilter === 'all' || currentFilter === tier.key;
+    const hidden = !show || emps.length === 0;
+
+    html += `<div class="milestone-section tier-${tier.key} ${hidden ? 'hidden' : ''}">`;
+    html += `<div class="milestone-header">`;
+    html += `<div class="milestone-icon">${tier.icon}</div>`;
+    html += `<h2>${tier.label} <span class="count">(${emps.length})</span></h2>`;
+    html += `</div>`;
+    html += `<div class="employees-grid">`;
+
+    emps.forEach(e => {
+      const color = avatarColor(e.firstName + e.surname);
+      const locClass = e.location === 'Devonport' ? 'loc-devonport' : 'loc-hobart';
+      html += `
+        <div class="employee-card">
+          <div class="avatar" style="background:${color}">${initials(e.firstName, e.surname)}</div>
+          <div class="emp-info">
+            <div class="emp-name">${e.firstName} ${e.surname}</div>
+            <div class="emp-meta">
+              <span class="location-tag ${locClass}">${e.location}</span>
+              &nbsp;·&nbsp; Started ${e.started}
+            </div>
+          </div>
+          <div class="emp-years">${e.display}</div>
+        </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  // Check if anything visible
+  const anyVisible = TIERS.some(t => {
+    const show = currentFilter === 'all' || currentFilter === t.key;
+    return show && groups[t.key].length > 0;
+  });
+  if (!anyVisible) {
+    html += '<div class="no-results">No team members match the current filters.</div>';
+  }
+
+  document.getElementById('content').innerHTML = html;
+
+  // Updated timestamp
+  document.getElementById('updatedText').textContent =
+    'Last updated: ' + today.toLocaleDateString('en-AU', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    });
+}
+
+// ══════════════════════════════════════════════════════════
+// FILTER HANDLERS
+// ══════════════════════════════════════════════════════════
+function setFilter(tier, btn) {
+  currentFilter = tier;
+  document.querySelectorAll('.filter-btn:not(.loc-btn)').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function setLocation(loc, btn) {
+  currentLocation = loc;
+  document.querySelectorAll('.filter-btn.loc-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+render();
+</script>
+</body>
+</html>
