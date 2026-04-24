@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RBD Electrical - Honor Board</title>
+<title>RBD Electrical — Honor Board</title>
 <style>
   :root {
     --rbd-blue: #14396A;
     --rbd-blue-light: #1B4F8F;
+    --rbd-blue-dark: #0E2A50;
     --rbd-gold: #EDB220;
     --rbd-gold-light: #F5C843;
     --rbd-green: #7AB929;
@@ -16,24 +17,23 @@
     --card-bg: #ffffff;
     --text-primary: #14203a;
     --text-secondary: #555566;
-    --gold: #d4a017;
     --silver: #8a9bae;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
+  html { scroll-behavior: smooth; }
   body {
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
     background: var(--bg-main);
     color: var(--text-primary);
     min-height: 100vh;
+    overflow-x: hidden;
   }
 
   /* ── Header ── */
   .header {
     background: linear-gradient(135deg, var(--rbd-blue) 0%, var(--rbd-blue-light) 50%, #245da1 100%);
     color: white;
-    padding: 1.2rem 2rem 2rem;
+    padding: 1.4rem 2rem 2.2rem;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -43,51 +43,123 @@
     position: absolute;
     bottom: 0; left: 0; right: 0;
     height: 6px;
-    background: linear-gradient(90deg, var(--rbd-gold), var(--rbd-green), var(--rbd-blue));
+    background: linear-gradient(90deg, var(--rbd-gold) 0%, var(--rbd-green) 50%, var(--rbd-blue-light) 100%);
+  }
+  .header-logo {
+    height: 140px;
+    margin-bottom: 0.2rem;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  }
+  .header-brand-fallback {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.95;
+    margin-bottom: 0.4rem;
+    display: none;
   }
   .header h1 {
-    font-size: 2.2rem;
+    font-size: 2.4rem;
     font-weight: 700;
     letter-spacing: 0.5px;
     margin-bottom: 0.3rem;
   }
   .header .subtitle {
     font-size: 1rem;
-    opacity: 0.85;
+    opacity: 0.9;
     font-weight: 400;
+    margin-bottom: 0.6rem;
   }
-  .header-logo {
-    height: 172px;
-    margin-bottom: -0.1rem;
-    object-fit: contain;
-  }
-  .header-brand-fallback {
-    font-size: 1rem;
-    font-weight: 600;
+  .header .tagline {
+    display: inline-block;
+    font-size: 0.72rem;
     letter-spacing: 3px;
     text-transform: uppercase;
-    opacity: 0.7;
-    margin-bottom: 0.3rem;
+    opacity: 0.8;
+    padding: 0.3rem 1rem;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    font-weight: 500;
   }
   .stats-bar {
     display: flex;
     justify-content: center;
     gap: 2.5rem;
-    margin-top: 1.2rem;
+    margin-top: 1.3rem;
     flex-wrap: wrap;
   }
-  .stat-item {
-    text-align: center;
-  }
+  .stat-item { text-align: center; }
   .stat-item .stat-num {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 700;
+    line-height: 1;
   }
   .stat-item .stat-label {
-    font-size: 0.75rem;
-    opacity: 0.7;
+    font-size: 0.72rem;
+    opacity: 0.75;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    margin-top: 0.25rem;
+  }
+
+  /* ── Milestone ribbons (upcoming / recent) ── */
+  .ribbons-wrap { max-width: 1180px; margin: 1.2rem auto 0; padding: 0 1.5rem; }
+  .ribbon {
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(20, 57, 106, 0.08);
+    animation: fadeUp 0.5s ease-out both;
+  }
+  .ribbon-upcoming {
+    background: linear-gradient(135deg, #fff8e1 0%, #fdecb6 100%);
+    border: 1px solid var(--rbd-gold);
+  }
+  .ribbon-recent {
+    background: linear-gradient(135deg, #e8f5d9 0%, #d4ebb5 100%);
+    border: 1px solid var(--rbd-green-dark);
+  }
+  .ribbon-icon {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+  }
+  .ribbon-upcoming .ribbon-icon { background: var(--rbd-gold); color: var(--rbd-blue); }
+  .ribbon-recent .ribbon-icon { background: var(--rbd-green-dark); }
+  .ribbon-icon svg { width: 22px; height: 22px; }
+  .ribbon-body { flex: 1; min-width: 0; }
+  .ribbon-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+    margin-bottom: 0.3rem;
+  }
+  .ribbon-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    font-size: 0.95rem;
+  }
+  .ribbon-entry {
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .ribbon-entry strong { color: var(--rbd-blue); }
+  .ribbon-entry .when {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 400;
   }
 
   /* ── Filter bar ── */
@@ -102,6 +174,7 @@
     position: sticky;
     top: 0;
     z-index: 100;
+    margin-top: 1rem;
   }
   .filter-btn {
     padding: 0.4rem 1rem;
@@ -112,6 +185,7 @@
     cursor: pointer;
     font-size: 0.82rem;
     font-weight: 500;
+    font-family: inherit;
     transition: all 0.2s;
   }
   .filter-btn:hover { border-color: var(--rbd-blue); color: var(--rbd-blue); }
@@ -125,72 +199,84 @@
     border-color: var(--rbd-gold);
     color: var(--rbd-blue);
   }
+  .filter-separator {
+    width: 1px;
+    background: #ddd;
+    margin: 0 0.3rem;
+    align-self: stretch;
+  }
 
   /* ── Milestone sections ── */
-  .content { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
-
+  .content { max-width: 1180px; margin: 0 auto; padding: 1.5rem; }
   .milestone-section {
-    margin-bottom: 2rem;
+    margin-bottom: 2.2rem;
     animation: fadeUp 0.5s ease-out both;
   }
-  .milestone-section:nth-child(2) { animation-delay: 0.1s; }
-  .milestone-section:nth-child(3) { animation-delay: 0.2s; }
-  .milestone-section:nth-child(4) { animation-delay: 0.3s; }
-  .milestone-section:nth-child(5) { animation-delay: 0.4s; }
-
+  .milestone-section:nth-child(2) { animation-delay: 0.08s; }
+  .milestone-section:nth-child(3) { animation-delay: 0.16s; }
+  .milestone-section:nth-child(4) { animation-delay: 0.24s; }
+  .milestone-section:nth-child(5) { animation-delay: 0.32s; }
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
   .milestone-header {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e0e4ea;
+    margin-bottom: 0.5rem;
   }
   .milestone-icon {
-    width: 40px; height: 40px;
+    width: 44px; height: 44px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.3rem;
     flex-shrink: 0;
   }
+  .milestone-icon svg { width: 24px; height: 24px; }
   .milestone-header h2 {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--text-primary);
   }
   .milestone-header .count {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     color: var(--text-secondary);
     font-weight: 400;
     margin-left: 0.3rem;
   }
+  /* Dashed underline accent (matches main website style) */
+  .milestone-underline {
+    height: 6px;
+    margin-bottom: 1rem;
+    background-image: repeating-linear-gradient(
+      90deg,
+      var(--underline-color, var(--rbd-blue)) 0 10px,
+      transparent 10px 16px
+    );
+    opacity: 0.55;
+    border-radius: 2px;
+  }
 
-  /* tier colors */
-  .tier-15 .milestone-icon { background: linear-gradient(135deg, var(--rbd-gold), #d4a017); color: var(--rbd-blue); }
-  .tier-15 .milestone-header { border-bottom-color: var(--rbd-gold); }
-  .tier-10 .milestone-icon { background: linear-gradient(135deg, var(--rbd-blue), var(--rbd-blue-light)); color: white; }
-  .tier-10 .milestone-header { border-bottom-color: var(--rbd-blue); }
-  .tier-5 .milestone-icon { background: linear-gradient(135deg, var(--rbd-green), var(--rbd-green-dark)); color: white; }
-  .tier-5 .milestone-header { border-bottom-color: var(--rbd-green); }
-  .tier-1 .milestone-icon { background: linear-gradient(135deg, var(--rbd-blue-light), #3572b5); color: white; }
-  .tier-1 .milestone-header { border-bottom-color: var(--rbd-blue-light); }
-  .tier-0 .milestone-icon { background: linear-gradient(135deg, #8a9bae, #6b7d8e); color: white; }
-  .tier-0 .milestone-header { border-bottom-color: var(--silver); }
+  /* Tier colours */
+  .tier-15 .milestone-icon { background: linear-gradient(135deg, var(--rbd-gold) 0%, #d4a017 100%); color: var(--rbd-blue); }
+  .tier-15 { --underline-color: var(--rbd-gold); }
+  .tier-10 .milestone-icon { background: linear-gradient(135deg, var(--rbd-blue) 0%, var(--rbd-blue-light) 100%); color: white; }
+  .tier-10 { --underline-color: var(--rbd-blue); }
+  .tier-5 .milestone-icon { background: linear-gradient(135deg, var(--rbd-green) 0%, var(--rbd-green-dark) 100%); color: white; }
+  .tier-5 { --underline-color: var(--rbd-green-dark); }
+  .tier-1 .milestone-icon { background: linear-gradient(135deg, var(--rbd-blue-light) 0%, #3572b5 100%); color: white; }
+  .tier-1 { --underline-color: var(--rbd-blue-light); }
+  .tier-0 .milestone-icon { background: linear-gradient(135deg, #8a9bae 0%, #6b7d8e 100%); color: white; }
+  .tier-0 { --underline-color: var(--silver); }
 
   /* ── Employee cards grid ── */
   .employees-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.8rem;
   }
-
   .employee-card {
     background: var(--card-bg);
     border-radius: 10px;
@@ -200,50 +286,70 @@
     display: flex;
     align-items: center;
     gap: 0.8rem;
+    position: relative;
   }
   .employee-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
-
+  .employee-card.has-milestone {
+    border-color: var(--rbd-gold);
+    box-shadow: 0 0 0 2px rgba(237, 178, 32, 0.15);
+  }
+  .milestone-badge {
+    position: absolute;
+    top: -8px; right: 10px;
+    background: linear-gradient(135deg, var(--rbd-gold) 0%, #d4a017 100%);
+    color: var(--rbd-blue);
+    font-size: 0.64rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(20, 57, 106, 0.2);
+    white-space: nowrap;
+  }
   .avatar {
-    width: 42px; height: 42px;
+    width: 44px; height: 44px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: white;
     flex-shrink: 0;
   }
-
   .emp-info { flex: 1; min-width: 0; }
   .emp-name {
     font-weight: 600;
-    font-size: 0.92rem;
+    font-size: 0.95rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .emp-meta {
-    font-size: 0.75rem;
+    font-size: 0.76rem;
     color: var(--text-secondary);
     margin-top: 2px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.3rem;
   }
   .emp-years {
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     font-weight: 600;
     white-space: nowrap;
+    color: var(--rbd-blue);
   }
-
   .location-tag {
     display: inline-block;
-    font-size: 0.65rem;
-    padding: 1px 6px;
+    font-size: 0.67rem;
+    padding: 2px 7px;
     border-radius: 8px;
     font-weight: 500;
-    vertical-align: middle;
   }
   .loc-devonport { background: #e8f0fb; color: var(--rbd-blue); }
   .loc-hobart { background: #fdf5e0; color: #9a7a0a; }
@@ -256,14 +362,6 @@
     font-size: 0.78rem;
   }
 
-  /* ── Responsive ── */
-  @media (max-width: 600px) {
-    .header h1 { font-size: 1.5rem; }
-    .stats-bar { gap: 1.5rem; }
-    .employees-grid { grid-template-columns: 1fr; }
-    .filter-bar { padding: 0.6rem 1rem; }
-  }
-
   /* ── No results ── */
   .no-results {
     text-align: center;
@@ -271,9 +369,86 @@
     color: var(--text-secondary);
     font-size: 0.95rem;
   }
-
-  /* Hide sections with no visible cards */
   .milestone-section.hidden { display: none; }
+
+  /* ────────────────────────────────────────────────
+     MOBILE (≤ 600px)
+     ──────────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .header { padding: 1rem 1rem 1.6rem; }
+    .header-logo { height: 95px; }
+    .header h1 { font-size: 1.6rem; }
+    .header .subtitle { font-size: 0.88rem; }
+    .header .tagline { font-size: 0.62rem; letter-spacing: 2px; padding: 0.25rem 0.75rem; }
+    .stats-bar { gap: 1.4rem; margin-top: 1rem; }
+    .stat-item .stat-num { font-size: 1.5rem; }
+    .employees-grid { grid-template-columns: 1fr; gap: 0.6rem; }
+    .filter-bar { padding: 0.6rem 0.7rem; gap: 0.35rem; }
+    .filter-btn { padding: 0.5rem 0.85rem; font-size: 0.78rem; }
+    .ribbons-wrap { padding: 0 0.8rem; margin-top: 0.8rem; }
+    .ribbon { padding: 0.8rem; gap: 0.7rem; }
+    .ribbon-icon { width: 36px; height: 36px; }
+    .ribbon-icon svg { width: 18px; height: 18px; }
+    .content { padding: 1rem 0.8rem; }
+    .milestone-header h2 { font-size: 1.05rem; }
+    .milestone-icon { width: 38px; height: 38px; }
+    .milestone-icon svg { width: 20px; height: 20px; }
+  }
+
+  /* ────────────────────────────────────────────────
+     TV / FRAME MODE (opt-in via ?mode=tv)
+     Larger type, no filter bar, no interactive affordances,
+     optimised to be readable from across a room.
+     ──────────────────────────────────────────────── */
+  body.tv-mode .filter-bar { display: none; }
+  body.tv-mode { background: var(--bg-main); }
+  body.tv-mode .header { padding: 2rem 2rem 2.8rem; }
+  body.tv-mode .header-logo { height: 200px; }
+  body.tv-mode .header h1 { font-size: 3.6rem; margin-bottom: 0.5rem; }
+  body.tv-mode .header .subtitle { font-size: 1.5rem; margin-bottom: 1rem; }
+  body.tv-mode .header .tagline { font-size: 1rem; letter-spacing: 5px; padding: 0.5rem 1.5rem; }
+  body.tv-mode .stats-bar { gap: 4rem; margin-top: 1.8rem; }
+  body.tv-mode .stat-item .stat-num { font-size: 3rem; }
+  body.tv-mode .stat-item .stat-label { font-size: 1rem; letter-spacing: 2.5px; }
+
+  body.tv-mode .ribbons-wrap { max-width: 1700px; padding: 0 2.5rem; margin-top: 1.8rem; }
+  body.tv-mode .ribbon { padding: 1.5rem 1.8rem; }
+  body.tv-mode .ribbon-icon { width: 64px; height: 64px; }
+  body.tv-mode .ribbon-icon svg { width: 34px; height: 34px; }
+  body.tv-mode .ribbon-title { font-size: 1rem; letter-spacing: 2.5px; margin-bottom: 0.5rem; }
+  body.tv-mode .ribbon-content { font-size: 1.4rem; gap: 0.6rem 2rem; }
+  body.tv-mode .ribbon-entry .when { font-size: 1.15rem; }
+
+  body.tv-mode .content { max-width: 1700px; padding: 2rem 2.5rem; }
+  body.tv-mode .milestone-section { margin-bottom: 3rem; }
+  body.tv-mode .milestone-header h2 { font-size: 1.85rem; }
+  body.tv-mode .milestone-header .count { font-size: 1.2rem; }
+  body.tv-mode .milestone-icon { width: 60px; height: 60px; }
+  body.tv-mode .milestone-icon svg { width: 32px; height: 32px; }
+  body.tv-mode .milestone-underline { height: 8px; margin-bottom: 1.5rem; }
+
+  body.tv-mode .employees-grid {
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 1rem;
+  }
+  body.tv-mode .employee-card { padding: 1.4rem 1.5rem; gap: 1.1rem; }
+  body.tv-mode .avatar { width: 64px; height: 64px; font-size: 1.3rem; }
+  body.tv-mode .emp-name { font-size: 1.35rem; }
+  body.tv-mode .emp-meta { font-size: 1rem; gap: 0.5rem; margin-top: 4px; }
+  body.tv-mode .emp-years { font-size: 1.15rem; }
+  body.tv-mode .location-tag { font-size: 0.92rem; padding: 3px 10px; }
+  body.tv-mode .milestone-badge { font-size: 0.85rem; padding: 4px 12px; top: -12px; }
+
+  body.tv-mode .updated { font-size: 1rem; padding: 3rem 1rem 4rem; }
+
+  /* Disable hover animations in TV mode (no mouse) */
+  body.tv-mode .employee-card { transition: none; }
+  body.tv-mode .employee-card:hover { transform: none; box-shadow: none; }
+  body.tv-mode .employee-card.has-milestone { box-shadow: 0 0 0 3px rgba(237, 178, 32, 0.25); }
+
+  /* Hide scrollbar in TV mode */
+  body.tv-mode::-webkit-scrollbar { display: none; }
+  body.tv-mode { scrollbar-width: none; -ms-overflow-style: none; }
 </style>
 </head>
 <body>
@@ -281,9 +456,10 @@
 <div class="header">
   <img src="https://i.imgur.com/DgbxQPv.png" alt="RBD Electrical" class="header-logo"
        onerror="this.style.display='none'; document.querySelector('.header-brand-fallback').style.display='block';">
-  <div class="header-brand-fallback" style="display:none;">RBD Electrical</div>
+  <div class="header-brand-fallback">RBD Electrical</div>
   <h1>Honor Board</h1>
   <p class="subtitle">Recognising the dedication and service of our team</p>
+  <div><span class="tagline">Proudly Tasmanian Owned &amp; Operated</span></div>
   <div class="stats-bar">
     <div class="stat-item">
       <div class="stat-num" id="statTotal">—</div>
@@ -300,6 +476,8 @@
   </div>
 </div>
 
+<div class="ribbons-wrap" id="ribbonsWrap"></div>
+
 <div class="filter-bar">
   <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
   <button class="filter-btn" data-filter="15" onclick="setFilter('15', this)">15+ Years</button>
@@ -307,20 +485,21 @@
   <button class="filter-btn" data-filter="5" onclick="setFilter('5', this)">5+ Years</button>
   <button class="filter-btn" data-filter="1" onclick="setFilter('1', this)">1–4 Years</button>
   <button class="filter-btn" data-filter="0" onclick="setFilter('0', this)">&lt; 1 Year</button>
-  <span style="width:1px;background:#ddd;margin:0 0.3rem"></span>
+  <span class="filter-separator"></span>
   <button class="filter-btn loc-btn" data-loc="all" onclick="setLocation('all', this)">Both Offices</button>
   <button class="filter-btn loc-btn" data-loc="Devonport" onclick="setLocation('Devonport', this)">Devonport</button>
   <button class="filter-btn loc-btn" data-loc="Hobart" onclick="setLocation('Hobart', this)">Hobart</button>
 </div>
 
 <div class="content" id="content"></div>
+
 <div class="updated" id="updatedText"></div>
 
 <script>
 // ══════════════════════════════════════════════════════════
 // DATA — Replace this array or load from external JSON
 // Power Automate can overwrite this section or provide
-// an external employees.json file
+// an external employees.json file.
 // ══════════════════════════════════════════════════════════
 const EMPLOYEES = [
   {"firstName":"Adam","surname":"Britt","location":"Devonport","startDate":"2025-04-25"},
@@ -334,7 +513,7 @@ const EMPLOYEES = [
   {"firstName":"Brayden","surname":"Schottmeier","location":"Hobart","startDate":"2022-01-17"},
   {"firstName":"Brendan","surname":"Stark","location":"Devonport","startDate":"2014-06-05"},
   {"firstName":"Brett","surname":"Saward","location":"Devonport","startDate":"2017-04-03"},
-  {"firstName":"Brock","surname":"Mitchell","location":"Devonport","startDate":"2018-01-15"},
+  {"firstName":"Brock","surname":"Mitchell","location":"Devonport","startDate":"2022-01-10"},
   {"firstName":"Brock","surname":"Wilton","location":"Hobart","startDate":"2018-07-23"},
   {"firstName":"Brock","surname":"Webb","location":"Devonport","startDate":"2023-11-20"},
   {"firstName":"Brodie","surname":"Whyte","location":"Hobart","startDate":"2021-01-11"},
@@ -418,15 +597,29 @@ const EMPLOYEES = [
 ];
 
 // ══════════════════════════════════════════════════════════
-// CONFIG
+// CONFIG — SVG icons for each tier
 // ══════════════════════════════════════════════════════════
+const SVG = {
+  star: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"><path d="M12 2l2.92 6.48L22 9.52l-5.32 4.85L18.18 22 12 18.27 5.82 22l1.5-7.63L2 9.52l7.08-1.04L12 2z"/></svg>',
+  trophy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5A2.5 2.5 0 0 1 2 6.5V5a1 1 0 0 1 1-1h3"/><path d="M18 9h1.5A2.5 2.5 0 0 0 22 6.5V5a1 1 0 0 0-1-1h-3"/><path d="M6 4h12v5a6 6 0 0 1-12 0V4z"/><path d="M9 22h6"/><path d="M12 15v7"/></svg>',
+  bolt: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7v8l10-12h-7V2z"/></svg>',
+  sparkle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.09 5.26L20 10l-5.91 1.74L12 17l-2.09-5.26L4 10l5.91-1.74L12 3z"/><path d="M19 16l.75 1.88L21 18.5l-1.25.62L19 21l-.75-1.88L17 18.5l1.25-.62L19 16z"/></svg>',
+  welcome: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21v-2a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v2"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>',
+  calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  party: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.8 11.3L2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="M22 2L15 9"/><path d="M5 5l3 3"/><path d="M20 15l-3-3"/></svg>'
+};
+
 const TIERS = [
-  { key: '15', min: 15, label: '15+ Years of Service', icon: '\u2B50', iconAlt: 'star' },
-  { key: '10', min: 10, label: '10–14 Years of Service', icon: '\uD83C\uDFC6', iconAlt: 'trophy' },
-  { key: '5',  min: 5,  label: '5–9 Years of Service', icon: '\uD83D\uDCAA', iconAlt: 'strength' },
-  { key: '1',  min: 1,  label: '1–4 Years of Service', icon: '\u26A1', iconAlt: 'bolt' },
-  { key: '0',  min: 0,  label: 'Welcome — First Year', icon: '\uD83D\uDC4B', iconAlt: 'wave' },
+  { key: '15', min: 15, label: '15+ Years of Service', icon: SVG.star },
+  { key: '10', min: 10, label: '10–14 Years of Service', icon: SVG.trophy },
+  { key: '5',  min: 5,  label: '5–9 Years of Service',  icon: SVG.bolt },
+  { key: '1',  min: 1,  label: '1–4 Years of Service',  icon: SVG.sparkle },
+  { key: '0',  min: 0,  label: 'Welcome — First Year',  icon: SVG.welcome },
 ];
+
+const MILESTONE_YEARS = [1, 5, 10, 15, 20, 25, 30, 35, 40];
+const LOOKAHEAD_DAYS = 30; // upcoming window
+const LOOKBACK_DAYS  = 30; // recent window
 
 const AVATAR_COLORS = [
   '#14396A','#c09a10','#5A9A10','#7b1fa2','#c62828',
@@ -440,10 +633,16 @@ const AVATAR_COLORS = [
 let currentFilter = 'all';
 let currentLocation = 'all';
 
+// TV mode: activated via ?mode=tv URL parameter
+const urlParams = new URLSearchParams(window.location.search);
+const TV_MODE = urlParams.get('mode') === 'tv';
+if (TV_MODE) document.body.classList.add('tv-mode');
+
 // ══════════════════════════════════════════════════════════
 // HELPERS
 // ══════════════════════════════════════════════════════════
 const today = new Date();
+today.setHours(0, 0, 0, 0);
 
 function yearsOfService(startDate) {
   if (!startDate) return 0;
@@ -457,10 +656,7 @@ function yearsOfService(startDate) {
 function exactYearsMonths(startDate) {
   if (!startDate) return 'Start date pending';
   const start = new Date(startDate);
-  // If start date is in the future
-  if (start > today) {
-    return 'Starting soon';
-  }
+  if (start > today) return 'Starting soon';
   let years = today.getFullYear() - start.getFullYear();
   let months = today.getMonth() - start.getMonth();
   if (today.getDate() < start.getDate()) months--;
@@ -471,10 +667,13 @@ function exactYearsMonths(startDate) {
   return years + (years === 1 ? ' yr ' : ' yrs ') + months + (months === 1 ? ' mo' : ' mos');
 }
 
+function formatDateShort(d) {
+  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
 function formatStartDate(startDate) {
   if (!startDate) return '';
-  const d = new Date(startDate);
-  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+  return formatDateShort(new Date(startDate));
 }
 
 function getTier(years) {
@@ -495,82 +694,153 @@ function initials(first, last) {
   return (first.charAt(0) + last.charAt(0)).toUpperCase();
 }
 
+function daysBetween(a, b) {
+  // Returns (b - a) in days, truncated to whole days.
+  return Math.round((b - a) / (1000 * 60 * 60 * 24));
+}
+
+// Given a start date and a milestone year count, returns the Date
+// on which that milestone anniversary falls.
+function milestoneDate(startDate, years) {
+  const d = new Date(startDate);
+  d.setFullYear(d.getFullYear() + years);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+// Returns { milestone, date, daysUntil } if the employee has a
+// milestone anniversary within the next LOOKAHEAD_DAYS days.
+function getUpcomingMilestone(employee) {
+  if (!employee.startDate) return null;
+  const start = new Date(employee.startDate);
+  // Find the next milestone anniversary after today.
+  for (const m of MILESTONE_YEARS) {
+    const d = milestoneDate(start, m);
+    if (d < today) continue; // already passed
+    const diff = daysBetween(today, d);
+    if (diff >= 0 && diff <= LOOKAHEAD_DAYS) {
+      return { milestone: m, date: d, daysUntil: diff };
+    }
+    break; // list is ascending; no need to look further
+  }
+  return null;
+}
+
+// Returns { milestone, date, daysSince } if the employee crossed a
+// milestone anniversary within the past LOOKBACK_DAYS days.
+function getRecentMilestone(employee) {
+  if (!employee.startDate) return null;
+  const start = new Date(employee.startDate);
+  // Walk the milestones; find most recent one that has passed.
+  let last = null;
+  for (const m of MILESTONE_YEARS) {
+    const d = milestoneDate(start, m);
+    if (d <= today) last = { milestone: m, date: d };
+    else break;
+  }
+  if (!last) return null;
+  const diff = daysBetween(last.date, today);
+  if (diff >= 0 && diff <= LOOKBACK_DAYS) {
+    return { ...last, daysSince: diff };
+  }
+  return null;
+}
+
+function relativeWhen(days, isFuture) {
+  if (days === 0) return 'today';
+  if (days === 1) return isFuture ? 'tomorrow' : 'yesterday';
+  if (isFuture) return 'in ' + days + ' days';
+  return days + ' days ago';
+}
+
 // ══════════════════════════════════════════════════════════
 // RENDER
 // ══════════════════════════════════════════════════════════
 function render() {
   // Process employees
-  const processed = EMPLOYEES.map(e => ({
-    ...e,
-    years: yearsOfService(e.startDate),
-    tier: getTier(yearsOfService(e.startDate)),
-    display: exactYearsMonths(e.startDate),
-    started: formatStartDate(e.startDate),
-  }));
+  const processed = EMPLOYEES.map(e => {
+    const years = yearsOfService(e.startDate);
+    return {
+      ...e,
+      years,
+      tier: getTier(years),
+      display: exactYearsMonths(e.startDate),
+      started: formatStartDate(e.startDate),
+      upcoming: getUpcomingMilestone(e),
+      recent: getRecentMilestone(e),
+    };
+  });
 
-  // Filter by location first
+  // Filter by location
   const filtered = currentLocation === 'all'
     ? processed
     : processed.filter(e => e.location === currentLocation);
 
-  // Stats (based on filtered list)
+  // Stats (based on location-filtered list)
   const total = filtered.length;
   const combinedYears = filtered.reduce((sum, e) => sum + e.years, 0);
   const longest = filtered.length > 0
     ? filtered.reduce((max, e) => e.years > max.years ? e : max, filtered[0])
     : { years: 0 };
-
   document.getElementById('statTotal').textContent = total;
   document.getElementById('statYears').textContent = combinedYears + '+';
   document.getElementById('statLongest').textContent = longest.years + ' yrs';
 
-  // Group by tier
+  // ── Milestone ribbons ──
+  renderRibbons(filtered);
+
+  // Group employees by tier
   const groups = {};
   TIERS.forEach(t => groups[t.key] = []);
-  filtered.forEach(e => {
-    groups[e.tier].push(e);
-  });
+  filtered.forEach(e => groups[e.tier].push(e));
 
-  // Sort within each group: most years first, then alphabetical
+  // Sort: most years first, then alphabetical by surname
   Object.values(groups).forEach(arr =>
     arr.sort((a, b) => b.years - a.years || a.surname.localeCompare(b.surname))
   );
 
-  // Build HTML
+  // Build tier HTML
   let html = '';
   TIERS.forEach(tier => {
     const emps = groups[tier.key];
     const show = currentFilter === 'all' || currentFilter === tier.key;
     const hidden = !show || emps.length === 0;
-
     html += `<div class="milestone-section tier-${tier.key} ${hidden ? 'hidden' : ''}">`;
-    html += `<div class="milestone-header">`;
-    html += `<div class="milestone-icon">${tier.icon}</div>`;
-    html += `<h2>${tier.label} <span class="count">(${emps.length})</span></h2>`;
-    html += `</div>`;
-    html += `<div class="employees-grid">`;
-
+    html +=   `<div class="milestone-header">`;
+    html +=     `<div class="milestone-icon">${tier.icon}</div>`;
+    html +=     `<h2>${tier.label} <span class="count">(${emps.length})</span></h2>`;
+    html +=   `</div>`;
+    html +=   `<div class="milestone-underline"></div>`;
+    html +=   `<div class="employees-grid">`;
     emps.forEach(e => {
       const color = avatarColor(e.firstName + e.surname);
       const locClass = e.location === 'Devonport' ? 'loc-devonport' : 'loc-hobart';
+      const hasBadge = e.recent || e.upcoming;
+      let badge = '';
+      if (e.recent) {
+        badge = `<div class="milestone-badge">Just hit ${e.recent.milestone} ${e.recent.milestone === 1 ? 'year' : 'years'}!</div>`;
+      } else if (e.upcoming) {
+        badge = `<div class="milestone-badge">${e.upcoming.milestone} ${e.upcoming.milestone === 1 ? 'year' : 'years'} ${relativeWhen(e.upcoming.daysUntil, true)}</div>`;
+      }
       html += `
-        <div class="employee-card">
+        <div class="employee-card ${hasBadge ? 'has-milestone' : ''}">
+          ${badge}
           <div class="avatar" style="background:${color}">${initials(e.firstName, e.surname)}</div>
           <div class="emp-info">
             <div class="emp-name">${e.firstName} ${e.surname}</div>
             <div class="emp-meta">
               <span class="location-tag ${locClass}">${e.location}</span>
-              &nbsp;·&nbsp; Started ${e.started}
+              <span>·</span>
+              <span>Started ${e.started}</span>
             </div>
           </div>
           <div class="emp-years">${e.display}</div>
         </div>`;
     });
-
-    html += `</div></div>`;
+    html +=   `</div>`;
+    html += `</div>`;
   });
 
-  // Check if anything visible
   const anyVisible = TIERS.some(t => {
     const show = currentFilter === 'all' || currentFilter === t.key;
     return show && groups[t.key].length > 0;
@@ -581,11 +851,48 @@ function render() {
 
   document.getElementById('content').innerHTML = html;
 
-  // Updated timestamp
   document.getElementById('updatedText').textContent =
     'Last updated: ' + today.toLocaleDateString('en-AU', {
       day: 'numeric', month: 'long', year: 'numeric'
     });
+}
+
+function renderRibbons(employees) {
+  const upcoming = employees
+    .filter(e => e.upcoming)
+    .sort((a, b) => a.upcoming.daysUntil - b.upcoming.daysUntil);
+  const recent = employees
+    .filter(e => e.recent)
+    .sort((a, b) => a.recent.daysSince - b.recent.daysSince);
+
+  let html = '';
+  if (recent.length > 0) {
+    html += `<div class="ribbon ribbon-recent">`;
+    html +=   `<div class="ribbon-icon">${SVG.party}</div>`;
+    html +=   `<div class="ribbon-body">`;
+    html +=     `<div class="ribbon-title">Recent milestones (last 30 days)</div>`;
+    html +=     `<div class="ribbon-content">`;
+    recent.forEach(e => {
+      html += `<span class="ribbon-entry"><strong>${e.firstName} ${e.surname}</strong> hit ${e.recent.milestone} ${e.recent.milestone === 1 ? 'year' : 'years'} <span class="when">· ${relativeWhen(e.recent.daysSince, false)}</span></span>`;
+    });
+    html +=     `</div>`;
+    html +=   `</div>`;
+    html += `</div>`;
+  }
+  if (upcoming.length > 0) {
+    html += `<div class="ribbon ribbon-upcoming">`;
+    html +=   `<div class="ribbon-icon">${SVG.calendar}</div>`;
+    html +=   `<div class="ribbon-body">`;
+    html +=     `<div class="ribbon-title">Coming up (next 30 days)</div>`;
+    html +=     `<div class="ribbon-content">`;
+    upcoming.forEach(e => {
+      html += `<span class="ribbon-entry"><strong>${e.firstName} ${e.surname}</strong> — ${e.upcoming.milestone} ${e.upcoming.milestone === 1 ? 'year' : 'years'} <span class="when">· ${relativeWhen(e.upcoming.daysUntil, true)}</span></span>`;
+    });
+    html +=     `</div>`;
+    html +=   `</div>`;
+    html += `</div>`;
+  }
+  document.getElementById('ribbonsWrap').innerHTML = html;
 }
 
 // ══════════════════════════════════════════════════════════
@@ -597,7 +904,6 @@ function setFilter(tier, btn) {
   btn.classList.add('active');
   render();
 }
-
 function setLocation(loc, btn) {
   currentLocation = loc;
   document.querySelectorAll('.filter-btn.loc-btn').forEach(b => b.classList.remove('active'));
@@ -606,9 +912,61 @@ function setLocation(loc, btn) {
 }
 
 // ══════════════════════════════════════════════════════════
+// TV MODE — auto-scroll loop
+// Scrolls smoothly from top to bottom, pauses, returns to top,
+// repeats. Tuned for ~60–90 seconds per pass.
+// ══════════════════════════════════════════════════════════
+function startTvAutoScroll() {
+  const SCROLL_SPEED_PX_PER_SEC = 35; // adjust for pace
+  const BOTTOM_PAUSE_MS = 5000;
+  const TOP_PAUSE_MS    = 3500;
+  let lastTime = null;
+  let paused = false;
+
+  function step(t) {
+    if (paused) { requestAnimationFrame(step); return; }
+    if (lastTime === null) lastTime = t;
+    const dt = (t - lastTime) / 1000;
+    lastTime = t;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    if (maxScroll <= 0) {
+      requestAnimationFrame(step);
+      return;
+    }
+    if (window.scrollY >= maxScroll - 1) {
+      paused = true;
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => { lastTime = null; paused = false; requestAnimationFrame(step); }, TOP_PAUSE_MS);
+      }, BOTTOM_PAUSE_MS);
+    } else {
+      window.scrollBy(0, SCROLL_SPEED_PX_PER_SEC * dt);
+      requestAnimationFrame(step);
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+// ══════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════
 render();
+if (TV_MODE) {
+  // Give layout a moment to settle before starting the scroll loop.
+  setTimeout(startTvAutoScroll, 1500);
+}
+
+// Re-render at midnight so "days until / days ago" and year counts
+// stay fresh on long-running TV sessions.
+function scheduleMidnightRefresh() {
+  const now = new Date();
+  const next = new Date(now);
+  next.setDate(next.getDate() + 1);
+  next.setHours(0, 5, 0, 0);
+  const msUntil = next - now;
+  setTimeout(() => { window.location.reload(); }, msUntil);
+}
+scheduleMidnightRefresh();
 </script>
 </body>
 </html>
